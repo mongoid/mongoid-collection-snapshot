@@ -5,4 +5,5 @@ class Artwork
   field :price
 
   belongs_to :artist
+  belongs_to :partner
 end

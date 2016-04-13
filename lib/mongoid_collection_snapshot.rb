@@ -4,7 +4,7 @@ module Mongoid
   module CollectionSnapshot
     extend ActiveSupport::Concern
 
-    DEFAULT_COLLECTION_KEY_NAME = '*'
+    DEFAULT_COLLECTION_KEY_NAME = '*'.freeze
 
     included do
       require 'mongoid_slug'
@@ -22,20 +22,20 @@ module Mongoid
       after_create :ensure_at_most_two_instances_exist
       before_destroy :drop_snapshot_collections
 
-      cattr_accessor :document_blocks
-      cattr_accessor :document_classes
+      class_attribute :document_blocks
+      class_attribute :document_classes
 
       # Mongoid documents on this snapshot.
       def documents(name = nil)
-        self.document_classes ||= {}
+        self.class.document_classes ||= {}
         class_name = "#{self.class.name}#{id}#{name}".underscore.camelize
         key = "#{class_name}-#{name || DEFAULT_COLLECTION_KEY_NAME}"
-        self.document_classes[key] ||= begin
+        self.class.document_classes[key] ||= begin
           document_block = document_blocks[name || DEFAULT_COLLECTION_KEY_NAME] if document_blocks
           collection_name = collection_snapshot(name).name
           klass = Class.new do
             include Mongoid::Document
-            if Mongoid::Compatibility::Version::mongoid5?
+            if Mongoid::Compatibility::Version.mongoid5?
               cattr_accessor :mongo_client
             else
               cattr_accessor :mongo_session

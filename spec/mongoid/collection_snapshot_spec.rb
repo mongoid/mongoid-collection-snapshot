@@ -7,20 +7,29 @@ module Mongoid
     end
 
     context 'creating a basic snapshot' do
+      let!(:gagosian) { Partner.create!(name: 'Gagosian') }
+      let!(:pace) { Partner.create!(name: 'Pace') }
       let!(:andy_warhol) { Artist.create!(name: 'Andy Warhol') }
       let!(:damien_hirst) { Artist.create!(name: 'Damien Hirst') }
-      let!(:flowers) { Artwork.create!(name: 'Flowers', artist: andy_warhol, price: 3_000_000) }
-      let!(:guns) { Artwork.create!(name: 'Guns', artist: andy_warhol, price: 1_000_000) }
-      let!(:vinblastine) { Artwork.create!(name: 'Vinblastine', artist: damien_hirst, price: 1_500_000) }
+      let!(:flowers) { Artwork.create!(name: 'Flowers', partner: gagosian, artist: andy_warhol, price: 3_000_000) }
+      let!(:guns) { Artwork.create!(name: 'Guns', partner: pace, artist: andy_warhol, price: 1_000_000) }
+      let!(:vinblastine) { Artwork.create!(name: 'Vinblastine', partner: gagosian, artist: damien_hirst, price: 1_500_000) }
 
       it 'returns nil if no snapshot has been created' do
         expect(AverageArtistPrice.latest).to be_nil
+        expect(AveragePartnerPrice.latest).to be_nil
       end
 
-      it 'runs the build method on creation' do
+      it 'runs the build method on creation for average artist price' do
         snapshot = AverageArtistPrice.create
         expect(snapshot.average_price('Andy Warhol')).to eq(2_000_000)
         expect(snapshot.average_price('Damien Hirst')).to eq(1_500_000)
+      end
+
+      it 'runs the build method on creation for average partner price' do
+        snapshot = AveragePartnerPrice.create
+        expect(snapshot.average_price('Gagosian')).to eq(2_250_000)
+        expect(snapshot.average_price('Pace')).to eq(1_000_000)
       end
 
       it 'returns the most recent snapshot through the latest methods' do
@@ -54,14 +63,25 @@ module Mongoid
           expect(document.artist).to eq andy_warhol
           expect(document.count).to eq 2
           expect(document.sum).to eq 4_000_000
+
+          snapshot = AveragePartnerPrice.create
+          expect(snapshot.documents.count).to eq 2
+          document = snapshot.documents.where(partner: pace).first
+          expect(document.partner).to eq pace
+          expect(document.count).to eq 1
+          expect(document.sum).to eq 1_000_000
         end
 
         it 'only creates one global class reference' do
           3.times do
             index = AverageArtistPrice.create
             2.times { expect(index.documents.count).to eq 2 }
+            index = AveragePartnerPrice.create
+            2.times { expect(index.documents.count).to eq 2 }
           end
+          expect(AveragePrice.document_classes).to be nil
           expect(AverageArtistPrice.document_classes.count).to be >= 3
+          expect(AveragePartnerPrice.document_classes.count).to be >= 3
         end
       end
     end
