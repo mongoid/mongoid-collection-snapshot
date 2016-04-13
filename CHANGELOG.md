@@ -1,8 +1,12 @@
 Next Release
 ------------
 
-* Compatibility with Mongoid 5 - [@dblock](https://github.com/dblock).
 * Your contribution here.
+
+1.2.0
+-----
+
+* Compatibility with Mongoid 5 - [@dblock](https://github.com/dblock).
 
 1.1.0
 -----
