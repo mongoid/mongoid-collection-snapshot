@@ -1,4 +1,4 @@
-require 'mongoid_collection_snapshot/version'
+require 'mongoid-collection-snapshot/version'
 
 module Mongoid
   module CollectionSnapshot

@@ -3,8 +3,10 @@ Mongoid Collection Snapshot
 
 Easy maintenance of collections of processed data in MongoDB with Mongoid 3, 4 and 5.
 
-[![Gem Version](https://badge.fury.io/rb/mongoid_collection_snapshot.svg)](https://badge.fury.io/rb/mongoid_collection_snapshot)
-[![Build Status](https://travis-ci.org/aaw/mongoid_collection_snapshot.svg)](https://travis-ci.org/aaw/mongoid_collection_snapshot)
+This is a forked, renamed and maintained and supported version of [mongoid_collection_snapshot](https://github.com/aaw/mongoid_collection_snapshot).
+
+[![Gem Version](https://badge.fury.io/rb/mongoid-collection-snapshot.svg)](https://badge.fury.io/rb/mongoid-collection-snapshot)
+[![Build Status](https://travis-ci.org/mongoid/mongoid-collection-snapshot.svg)](https://travis-ci.org/mongoid/mongoid-collection-snapshot)
 
 Quick example:
 --------------
@@ -20,7 +22,7 @@ From time to time, your system runs a map/reduce job to compute the average pric
 If your system wants to maintain and use this average price data, it has to do so at the level of raw MongoDB operations, since map/reduce result documents don't map well to models in Mongoid.
 Furthermore, even though map/reduce jobs can take some time to run, you probably want the entire `artist_average_price` collection populated atomically from the point of view of your system, since otherwise you don't ever know the state of the data in the collection - you could access it in the middle of a map/reduce and get partial, incorrect results.
 
-A mongoid_collection_snapshot solves this problem by providing an atomic view of collections of data like map/reduce results that live outside of Mongoid.
+A mongoid-collection-snapshot solves this problem by providing an atomic view of collections of data like map/reduce results that live outside of Mongoid.
 
 In the example above, we'd set up our average artist price collection like:
 
@@ -80,11 +82,11 @@ The latest snapshot is always available as `AverageArtistPrice.latest`, so you c
 warhol_expected_price = AverageArtistPrice.latest.average_price('Andy Warhol')
 ```
 
-And always be sure that you'll never be looking at partial results. The only thing you need to do to hook into mongoid_collection_snapshot is implement the method `build`, which populates the collection snapshot and any indexes you need.
+And always be sure that you'll never be looking at partial results. The only thing you need to do to hook into mongoid-collection-snapshot is implement the method `build`, which populates the collection snapshot and any indexes you need.
 
-By default, mongoid_collection_snapshot maintains the most recent two snapshots computed any given time.
+By default, mongoid-collection-snapshot maintains the most recent two snapshots computed any given time.
 
-Query Snapshot Data with Mongoid
+ery Snapshot Data with Mongoid
 --------------------------------
 
 You can do better than the average price example above and define first-class models for your collection snapshot data, then access them as any other Mongoid collection via collection snapshot's `.documents` method.
@@ -218,4 +220,4 @@ development:
 License
 =======
 
-MIT License, see [LICENSE.txt](https://github.com/aaw/mongoid_collection_snapshot/blob/master/LICENSE.txt) for details.
+MIT License, see [LICENSE.txt](LICENSE.txt) for details.
