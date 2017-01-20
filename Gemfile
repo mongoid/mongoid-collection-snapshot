@@ -19,4 +19,5 @@ group :development, :test do
   gem 'rspec', '~> 3.1'
   gem 'rake'
   gem 'timecop'
+  gem 'mongoid-danger', '~> 0.1.1'
 end

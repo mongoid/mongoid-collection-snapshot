@@ -3,7 +3,7 @@ Mongoid Collection Snapshot
 
 Easy maintenance of collections of processed data in MongoDB with Mongoid 3, 4 and 5.
 
-This is a forked, renamed and maintained and supported version of [mongoid_collection_snapshot](https://github.com/aaw/mongoid_collection_snapshot).
+This is a forked, renamed, maintained and supported version of [mongoid_collection_snapshot](https://github.com/aaw/mongoid_collection_snapshot).
 
 [![Gem Version](https://badge.fury.io/rb/mongoid-collection-snapshot.svg)](https://badge.fury.io/rb/mongoid-collection-snapshot)
 [![Build Status](https://travis-ci.org/mongoid/mongoid-collection-snapshot.svg)](https://travis-ci.org/mongoid/mongoid-collection-snapshot)
