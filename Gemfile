@@ -16,8 +16,9 @@ else
 end
 
 group :development, :test do
-  gem 'rspec', '~> 3.1'
-  gem 'rake'
-  gem 'timecop'
   gem 'mongoid-danger', '~> 0.1.1'
+  gem 'rake'
+  gem 'rspec', '~> 3.1'
+  gem 'rubocop', '0.47.1'
+  gem 'timecop'
 end
