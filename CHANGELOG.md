@@ -1,3 +1,7 @@
+### 1.3.1 (Next)
+
+* Your contribution here.
+
 ### 1.3.0 (1/20/2017)
 
 * [#2](https://github.com/mongoid/mongoid-collection-snapshot/pull/2): Support for Mongoid 6 - [@dblock](https://github.com/dblock).
