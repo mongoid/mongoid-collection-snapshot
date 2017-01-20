@@ -1,7 +1,7 @@
 Mongoid Collection Snapshot
 ===========================
 
-Easy maintenance of collections of processed data in MongoDB with Mongoid 3, 4 and 5.
+Easy maintenance of collections of processed data in MongoDB with Mongoid 3, 4, 5 and 6.
 
 This is a forked, renamed, maintained and supported version of [mongoid_collection_snapshot](https://github.com/aaw/mongoid_collection_snapshot).
 

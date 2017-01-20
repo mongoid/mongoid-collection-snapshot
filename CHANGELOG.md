@@ -1,11 +1,10 @@
-### 1.3.0 (Next)
+### 1.3.0 (1/20/2017)
 
 * [#2](https://github.com/mongoid/mongoid-collection-snapshot/pull/2): Support for Mongoid 6 - [@dblock](https://github.com/dblock).
 * [#1](https://github.com/mongoid/mongoid-collection-snapshot/pull/1): Gem renamed to mongoid-collection-snapshot and forked to the [mongoid org](https://github.com/mongoid) - [@dblock](https://github.com/dblock).
 * [#18](https://github.com/aaw/mongoid_collection_snapshot/pull/18): Fix: classes that include `Mongoid::CollectionSnapshot` can be inherited - [@dblock](https://github.com/dblock).
 * [#3](https://github.com/mongoid/mongoid-collection-snapshot/pull/3): Added Danger, PR linter - [@dblock](https://github.com/dblock).
 * [#4](https://github.com/mongoid/mongoid-collection-snapshot/pull/4): Added RuboCop - [@dblock](https://github.com/dblock).
-* Your contribution here.
 
 ### 1.2.0
 
