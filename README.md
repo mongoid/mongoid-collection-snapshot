@@ -8,30 +8,27 @@ This is a forked, renamed, maintained and supported version of [mongoid_collecti
 [![Gem Version](https://badge.fury.io/rb/mongoid-collection-snapshot.svg)](https://badge.fury.io/rb/mongoid-collection-snapshot)
 [![Build Status](https://travis-ci.org/mongoid/mongoid-collection-snapshot.svg)](https://travis-ci.org/mongoid/mongoid-collection-snapshot)
 
-Quick example:
---------------
+### Example
 
 Suppose that you have a Mongoid model called `Artwork`, stored in a MongoDB collection called `artworks` and the underlying documents look something like:
 
-    { name: 'Flowers', artist: 'Andy Warhol', price: 3000000 }
+    { name: 'Flowers', artist_id: ..., price: 3000000 }
 
-From time to time, your system runs a map/reduce job to compute the average price of each artist's works, resulting in a collection called `artist_average_price` that contains documents that look like:
+From time to time, your system runs a map/reduce job to compute the total price of all artist's works, resulting in a collection called `artist_artwork_price` that contains documents that look like:
 
-    { _id: { artist: 'Andy Warhol' }, value: { price: 1500000 } }
+    { _id: ..., artist_id: ..., sum: 1500000 }
 
-If your system wants to maintain and use this average price data, it has to do so at the level of raw MongoDB operations, since map/reduce result documents don't map well to models in Mongoid.
-Furthermore, even though map/reduce jobs can take some time to run, you probably want the entire `artist_average_price` collection populated atomically from the point of view of your system, since otherwise you don't ever know the state of the data in the collection - you could access it in the middle of a map/reduce and get partial, incorrect results.
+If your system wants to maintain and use this price data, it has to do so at the level of raw MongoDB operations, since map/reduce result documents don't map well to models in Mongoid. Furthermore, even though map/reduce jobs can take some time to run, you probably want the entire `artist_artwork_price` collection populated atomically from the point of view of your system, since otherwise you don't ever know the state of the data in the collection - you could access it in the middle of a map/reduce and get partial, incorrect results.
 
 A mongoid-collection-snapshot solves this problem by providing an atomic view of collections of data like map/reduce results that live outside of Mongoid.
 
-In the example above, we'd set up our average artist price collection like:
+In the example below, we set up our artist price sum collection by including `Mongoid::CollectionSnapshot` and implementing a `build` method.
 
 ``` ruby
-class AverageArtistPrice
+class ArtistArtworkPrice
   include Mongoid::CollectionSnapshot
 
   def build
-
     map = <<-EOS
       function() {
         emit({ artist_id: this['artist_id']}, { count: 1, sum: this['price'] })
@@ -59,35 +56,27 @@ class AverageArtistPrice
     end
   end
 end
-
 ```
 
-Now, if you want to schedule a recomputation, just call `AverageArtistPrice.create`. You can define other methods on collection snapshots.
+Now, if you want to schedule a recomputation, just call `ArtistArtworkPrice.create`.
+
+The latest snapshot is always available as `ArtistArtworkPrice.latest`.
 
 ```ruby
-class AverageArtistPrice
-  ...
-
-  def average_price(artist_name)
-    artist = Artist.where(name: artist_name).first
-    doc = collection_snapshot.where(artist_id: artist.id).first
-    doc['sum'] / doc['count']
-  end
-end
+andy_warhol = Artist.where(name: 'Andy Warhol').first
+andy_warhol_price = ArtistArtworkPrice.latest.collection_snapshot.where(artist_id: andy_warhol.id).first
+average_price = andy_warhol_price['sum'] / andy_warhol_price['count']
 ```
 
-The latest snapshot is always available as `AverageArtistPrice.latest`, so you can write code like:
+### Snapshot Cleanup
+
+By default, mongoid-collection-snapshot maintains the most recent two snapshots computed any given time. Set `max_collection_snapshot_instances` to change this.
 
 ```ruby
-warhol_expected_price = AverageArtistPrice.latest.average_price('Andy Warhol')
+ArtistArtworkPrice.max_collection_snapshot_instances = 3
 ```
 
-And always be sure that you'll never be looking at partial results. The only thing you need to do to hook into mongoid-collection-snapshot is implement the method `build`, which populates the collection snapshot and any indexes you need.
-
-By default, mongoid-collection-snapshot maintains the most recent two snapshots computed any given time.
-
-ery Snapshot Data with Mongoid
---------------------------------
+### Query Snapshot Data with Mongoid
 
 You can do better than the average price example above and define first-class models for your collection snapshot data, then access them as any other Mongoid collection via collection snapshot's `.documents` method.
 
@@ -107,7 +96,7 @@ class AverageArtistPrice
 end
 ```
 
-Another example iterates through all latest artist price averages.
+The following example iterates through all latest artist price averages.
 
 ```ruby
 AverageArtistPrice.latest.documents.each do |doc|
@@ -115,19 +104,18 @@ AverageArtistPrice.latest.documents.each do |doc|
 end
 ```
 
-Multi-collection snapshots
---------------------------
+This code can be found in the [example](example) folder.
+
+### Multi-Collection Snapshots
 
 You can maintain multiple collections atomically within the same snapshot by passing unique collection identifiers to `collection_snaphot` when you call it in your build or query methods:
 
 ``` ruby
-class ArtistStats
+class ArtistArtworkPrice
   include Mongoid::CollectionSnapshot
 
   def build
-    # ...
     # define map/reduce for average and max aggregations
-    # ...
     Mongoid.default_session.command('mapreduce' => 'artworks', map: map_avg, reduce: reduce_avg, out: collection_snapshot('average'))
     Mongoid.default_session.command('mapreduce' => 'artworks', map: map_max, reduce: reduce_max, out: collection_snapshot('max'))
   end
@@ -147,7 +135,7 @@ end
 Specify the name of the collection to define first class Mongoid models.
 
 ```ruby
-class ArtistStats
+class ArtistArtworkPrice
   document('average') do
     field :value, type: Hash
   end
@@ -161,27 +149,26 @@ end
 Access these by name.
 
 ```ruby
-ArtistStats.latest.documents('average')
-ArtistStats.latest.documents('max')
+ArtistArtworkPrice.latest.documents('average')
+ArtistArtworkPrice.latest.documents('max')
 ```
 
 If fields across multiple collection snapshots are identical, a single default `document` is sufficient.
 
 ```ruby
-class ArtistStats
+class ArtistArtworkPrice
   document do
     field :value, type: Hash
   end
 end
 ```
 
-Custom database connections
----------------------------
+### Custom Database Connections
 
 Your class can specify a custom database for storage of collection snapshots by overriding the `snapshot_session` instance method. In this example, we memoize the connection at the class level to avoid creating many separate connection instances.
 
 ```ruby
-class ArtistStats
+class ArtistArtworkPrice
   include Mongoid::CollectionSnapshot
 
   def build
@@ -189,13 +176,7 @@ class ArtistStats
   end
 
   def snapshot_session
-    self.class.snapshot_session
-  end
-
-  def self.snapshot_session
-    @@snapshot_session ||= Mongo::Client.new('mongodb://localhost:27017').tap do |c|
-      c.use :alternate_db
-    end
+    @snapshot_session ||= Mongo::Client.new('mongodb://localhost:27017/artists_and_artworks')
   end
 end
 ```
@@ -212,12 +193,13 @@ development:
 ```
 
 ```ruby
-  def snapshot_session
-    Mongoid.session('imports')
-  end
+def snapshot_session
+  Mongoid.session('imports')
+end
 ```
 
-License
-=======
+### License
+
+Copyright (c) 2011-2017 Art.sy Inc. and Contributors
 
 MIT License, see [LICENSE.txt](LICENSE.txt) for details.
