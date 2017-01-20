@@ -1,5 +1,6 @@
 ### 1.3.1 (Next)
 
+* [#8](https://github.com/mongoid/mongoid-collection-snapshot/pull/8): Lock mongoid-compatibility at 0.4.0 or newer - [@dblock](https://github.com/dblock).
 * Your contribution here.
 
 ### 1.3.0 (1/20/2017)
