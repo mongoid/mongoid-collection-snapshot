@@ -10,7 +10,7 @@ class CustomConnectionSnapshot
   end
 
   def build
-    if Mongoid::Compatibility::Version.mongoid5?
+    if Mongoid::Compatibility::Version.mongoid5? || Mongoid::Compatibility::Version.mongoid6?
       collection_snapshot.insert_one('name' => 'foo')
       collection_snapshot('foo').insert_one('name' => 'bar')
     else
@@ -22,10 +22,8 @@ class CustomConnectionSnapshot
   private
 
   def self.new_snapshot_session
-    if Mongoid::Compatibility::Version.mongoid5?
-      Mongo::Client.new('mongodb://localhost:27017').tap do |client|
-        client.use :snapshot_test
-      end
+    if Mongoid::Compatibility::Version.mongoid5? || Mongoid::Compatibility::Version.mongoid6?
+      Mongo::Client.new('mongodb://localhost:27017/snapshot_test')
     else
       Moped::Session.new(['127.0.0.1:27017']).tap do |session|
         session.use :snapshot_test

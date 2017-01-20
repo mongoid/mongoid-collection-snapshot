@@ -17,13 +17,13 @@ require 'mongoid-compatibility'
 RSpec.configure do |c|
   c.before(:all) do
     Mongoid.logger.level = Logger::INFO
-    Mongo::Logger.logger.level = Logger::INFO if Mongoid::Compatibility::Version.mongoid5?
+    Mongo::Logger.logger.level = Logger::INFO if Mongoid::Compatibility::Version.mongoid5? || Mongoid::Compatibility::Version.mongoid6?
   end
   c.before(:each) do
     Mongoid.purge!
   end
   c.after(:all) do
-    if Mongoid::Compatibility::Version.mongoid5?
+    if Mongoid::Compatibility::Version.mongoid5? || Mongoid::Compatibility::Version.mongoid6?
       Mongoid.default_client.database.drop
     else
       Mongoid.default_session.drop

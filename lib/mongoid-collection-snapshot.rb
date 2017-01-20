@@ -43,7 +43,9 @@ module Mongoid
             instance_eval(&document_block) if document_block
             store_in collection: collection_name
           end
-          if Mongoid::Compatibility::Version.mongoid5?
+          if Mongoid::Compatibility::Version.mongoid6?
+            PersistenceContext.set(klass, database: snapshot_session.database.name)
+          elsif Mongoid::Compatibility::Version.mongoid5?
             klass.mongo_client = snapshot_session
           else
             klass.mongo_session = snapshot_session
@@ -74,7 +76,7 @@ module Mongoid
     end
 
     def drop_snapshot_collections
-      collections = Mongoid::Compatibility::Version.mongoid5? ? snapshot_session.database.collections : snapshot_session.collections
+      collections = Mongoid::Compatibility::Version.mongoid5? || Mongoid::Compatibility::Version.mongoid6? ? snapshot_session.database.collections : snapshot_session.collections
       collections.each do |collection|
         collection.drop if collection.name =~ /^#{self.collection.name}\.([^\.]+\.)?#{slug}$/
       end
@@ -92,7 +94,7 @@ module Mongoid
 
     # Override to supply custom database connection for snapshots
     def snapshot_session
-      Mongoid::Compatibility::Version.mongoid5? ? Mongoid.default_client : Mongoid.default_session
+      Mongoid::Compatibility::Version.mongoid5? || Mongoid::Compatibility::Version.mongoid6? ? Mongoid.default_client : Mongoid.default_session
     end
   end
 end
