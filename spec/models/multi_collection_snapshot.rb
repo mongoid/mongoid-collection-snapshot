@@ -17,7 +17,7 @@ class MultiCollectionSnapshot
   end
 
   def build
-    if Mongoid::Compatibility::Version.mongoid5?
+    if Mongoid::Compatibility::Version.mongoid5? || Mongoid::Compatibility::Version.mongoid6?
       collection_snapshot('foo').insert_one('name' => 'foo!', count: 1)
       collection_snapshot('bar').insert_one('name' => 'bar!', number: 2)
       collection_snapshot('baz').insert_one('name' => 'baz!', digit: 3)
