@@ -1,6 +1,7 @@
 Next Release
 ------------
 
+* Gem renamed to mongoid-collection-snapshot and forked to the [mongoid org](https://github.com/mongoid) - [@dblock](https://github.com/dblock).
 * [#18](https://github.com/aaw/mongoid_collection_snapshot/pull/18): Fix: classes that include `Mongoid::CollectionSnapshot` can be inherited - [@dblock](https://github.com/dblock).
 * Your contribution here.
 

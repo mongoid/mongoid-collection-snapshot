@@ -6,10 +6,10 @@ require 'mongoid'
 require 'timecop'
 
 Mongoid.configure do |config|
-  config.connect_to('mongoid_collection_snapshot_test')
+  config.connect_to('mongoid-collection-snapshot_test')
 end
 
-require File.expand_path('../../lib/mongoid_collection_snapshot', __FILE__)
+require File.expand_path('../../lib/mongoid-collection-snapshot', __FILE__)
 Dir["#{File.dirname(__FILE__)}/models/**/*.rb"].each { |f| require f }
 
 require 'mongoid-compatibility'

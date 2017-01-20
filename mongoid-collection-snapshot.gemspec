@@ -1,8 +1,8 @@
 $LOAD_PATH.push File.expand_path('../lib', __FILE__)
-require 'mongoid_collection_snapshot/version'
+require 'mongoid-collection-snapshot/version'
 
 Gem::Specification.new do |s|
-  s.name = 'mongoid_collection_snapshot'
+  s.name = 'mongoid-collection-snapshot'
   s.version = Mongoid::CollectionSnapshot::VERSION
   s.authors = ['Aaron Windsor']
   s.email = 'aaron.windsor@gmail.com'
@@ -10,7 +10,7 @@ Gem::Specification.new do |s|
   s.required_rubygems_version = '>= 1.3.6'
   s.files = `git ls-files`.split("\n")
   s.require_paths = ['lib']
-  s.homepage = 'http://github.com/aaw/mongoid_collection_snapshot'
+  s.homepage = 'http://github.com/mongoid/mongoid-collection-snapshot'
   s.licenses = ['MIT']
   s.summary = 'Easy maintenence of collections of processed data in MongoDB with the Mongoid ODM.'
   s.add_dependency 'mongoid', '>= 3.0'
