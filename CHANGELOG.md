@@ -1,8 +1,11 @@
-### 1.3.1 (Next)
+### 1.3.2 (Next)
+
+* Your contribution here.
+
+### 1.3.1 (5/22/2017)
 
 * [#11](https://github.com/mongoid/mongoid-collection-snapshot/pull/11): Fix: incorrect connection used with Mongoid 6 - [@dblock](https://github.com/dblock).
 * [#8](https://github.com/mongoid/mongoid-collection-snapshot/pull/8): Lock mongoid-compatibility at 0.4.0 or newer - [@dblock](https://github.com/dblock).
-* Your contribution here.
 
 ### 1.3.0 (1/20/2017)
 
