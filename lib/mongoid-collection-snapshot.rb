@@ -44,7 +44,8 @@ module Mongoid
             store_in collection: collection_name
           end
           if Mongoid::Compatibility::Version.mongoid6?
-            PersistenceContext.set(klass, database: snapshot_session.database.name)
+            ctx = PersistenceContext.set(klass, {})
+            ctx.instance_variable_set(:@client, snapshot_session)
           elsif Mongoid::Compatibility::Version.mongoid5?
             klass.mongo_client = snapshot_session
           else

@@ -154,9 +154,7 @@ module Mongoid
 
       context '#documents' do
         it 'uses the custom session' do
-          if Mongoid::Compatibility::Version.mongoid6?
-            expect(CustomConnectionSnapshot.new.documents.database_name).to eq :snapshot_test
-          elsif Mongoid::Compatibility::Version.mongoid5?
+          if Mongoid::Compatibility::Version.mongoid5? || Mongoid::Compatibility::Version.mongoid6?
             expect(CustomConnectionSnapshot.new.documents.mongo_client).to eq CustomConnectionSnapshot.snapshot_session
           else
             expect(CustomConnectionSnapshot.new.documents.mongo_session).to eq CustomConnectionSnapshot.snapshot_session
