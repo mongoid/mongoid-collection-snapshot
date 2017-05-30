@@ -43,6 +43,7 @@ module Mongoid
             instance_eval(&document_block) if document_block
             store_in collection: collection_name
           end
+          Object.const_set(class_name, klass)
           if Mongoid::Compatibility::Version.mongoid6?
             ctx = PersistenceContext.set(klass, {})
             ctx.instance_variable_set(:@client, snapshot_session)
@@ -51,7 +52,6 @@ module Mongoid
           else
             klass.mongo_session = snapshot_session
           end
-          Object.const_set(class_name, klass)
           klass
         end
       end
