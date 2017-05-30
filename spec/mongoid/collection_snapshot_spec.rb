@@ -55,6 +55,15 @@ module Mongoid
         end
       end
 
+      it 'maintains at most max_collection_snapshot_instances of the latest snapshots to support its calculations' do
+        AverageArtistPrice.max_collection_snapshot_instances = 5
+        AverageArtistPrice.create
+        10.times do
+          AverageArtistPrice.create
+        end
+        expect(AverageArtistPrice.count).to eq(5)
+      end
+
       context '#documents' do
         it 'provides access to a Mongoid collection' do
           snapshot = AverageArtistPrice.create

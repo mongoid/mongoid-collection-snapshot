@@ -2,7 +2,7 @@ require 'mongoid-collection-snapshot/version'
 
 module Mongoid
   module CollectionSnapshot
-    extend ActiveSupport::Concern
+    extend ::ActiveSupport::Concern
 
     DEFAULT_COLLECTION_KEY_NAME = '*'.freeze
 
@@ -16,10 +16,10 @@ module Mongoid
       field :workspace_basename, default: 'snapshot'
       slug :workspace_basename
 
-      field :max_collection_snapshot_instances, default: 2
+      class_attribute :max_collection_snapshot_instances
 
       before_create :build
-      after_create :ensure_at_most_two_instances_exist
+      after_create :ensure_at_most_max_instances_exist
       before_destroy :drop_snapshot_collections
 
       class_attribute :document_blocks
@@ -87,8 +87,9 @@ module Mongoid
     # called after each save - making sure only at most two instances exists should be
     # sufficient to ensure that this data can be rebuilt live without corrupting any
     # existing computations that might have a handle to the previous "latest" instance.
-    def ensure_at_most_two_instances_exist
+    def ensure_at_most_max_instances_exist
       all_instances = self.class.order_by([[:created_at, :desc]]).to_a
+      max_collection_snapshot_instances = self.class.max_collection_snapshot_instances || 2
       return unless all_instances.length > max_collection_snapshot_instances
       all_instances[max_collection_snapshot_instances..-1].each(&:destroy)
     end

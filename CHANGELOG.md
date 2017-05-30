@@ -1,5 +1,6 @@
 ### 1.3.2 (Next)
 
+* [#7](https://github.com/mongoid/mongoid-collection-snapshot/issues/7): Fix: `max_collection_snapshot_instances` broken - [@dblock](https://github.com/dblock).
 * Your contribution here.
 
 ### 1.3.1 (5/22/2017)
