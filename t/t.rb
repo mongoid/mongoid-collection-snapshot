@@ -1,6 +1,8 @@
 require 'mongoid'
 require 'mongoid-collection-snapshot'
 
+puts ""
+
 Mongoid.load!("mongoid.yml", :production)
 Mongo::Logger.logger = Mongoid.logger = Logger.new('mongo.log', Logger::DEBUG)
 
@@ -21,9 +23,10 @@ class WidgetsAndGadgets
   end
 
   def build
+    puts "#{collection_snapshot.name} in #{collection_snapshot.database.name} has #{collection_snapshot.count} items"
     Widget.all.each do |widget|
       Gadget.all.each do |gadget|
-        next unless Random.rand(2) == 1
+        puts "inserted #{widget.id} x #{gadget.id}"
         collection_snapshot.insert_one(widget_id: widget.id, gadget_id: gadget.id)
       end
     end
@@ -37,19 +40,21 @@ end
 Widget.delete_all
 Gadget.delete_all
 
-Widget.create!
-Gadget.create!
+w = Widget.create!
+puts "created widget #{w._id}"
+g = Gadget.create!
+puts "created gadget #{g._id}"
+
+WidgetsAndGadgets.each.map(&:collection_snapshot).map(&:drop)
 
 WidgetsAndGadgets.create!
 
 require 'thread'
 
-workers = (0...32).map do
+workers = (0...8).map do
   Thread.new do
-    STDOUT.write "."
     WidgetsAndGadgets.latest.documents.each do |pair|
-      raise "got a nil widget" unless pair.widget
-      raise "got a nil gadget" unless pair.gadget
+      raise "got a nil widget in #{pair.widget_id} x #{pair.gadget_id}" unless pair.widget || pair.gadget
     end
   end
 end
