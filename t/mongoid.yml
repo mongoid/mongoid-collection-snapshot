@@ -1,7 +1,0 @@
-production:
-  clients:
-    default:
-      uri: mongodb://localhost:27017/widgets-and-gadgets
-    imports:
-      uri: mongodb://localhost:27017/widgets-and-gadgets-imports
-

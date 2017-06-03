@@ -41,17 +41,21 @@ module Mongoid
               cattr_accessor :mongo_session
             end
             instance_eval(&document_block) if document_block
-            store_in collection: collection_name
           end
-          Object.const_set(class_name, klass)
           if Mongoid::Compatibility::Version.mongoid6?
-            ctx = PersistenceContext.set(klass, {})
-            ctx.instance_variable_set(:@client, snapshot_session)
+            # assign a name to the snapshot session
+            session_id = snapshot_session.object_id.to_s
+            Mongoid::Clients.set session_id, snapshot_session
+            # tell the class to use the client by name
+            klass.class_variable_set :@@storage_options, client: session_id, collection: collection_name
           elsif Mongoid::Compatibility::Version.mongoid5?
+            klass.store_in collection: collection_name
             klass.mongo_client = snapshot_session
           else
+            klass.store_in collection: collection_name
             klass.mongo_session = snapshot_session
           end
+          Object.const_set(class_name, klass)
           klass
         end
       end

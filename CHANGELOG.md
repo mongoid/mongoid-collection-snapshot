@@ -1,5 +1,6 @@
 ### 1.3.2 (Next)
 
+* [#13](https://github.com/mongoid/mongoid-collection-snapshot/issues/13): Fix: use correct database on all threads - [@dblock](https://github.com/dblock).
 * [#7](https://github.com/mongoid/mongoid-collection-snapshot/issues/7): Fix: `max_collection_snapshot_instances` broken - [@dblock](https://github.com/dblock).
 * Your contribution here.
 
