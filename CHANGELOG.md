@@ -1,3 +1,7 @@
+### 1.3.3 (Next)
+
+* Your contribution here.
+
 ### 1.3.2 (6/4/2017)
 
 * [#13](https://github.com/mongoid/mongoid-collection-snapshot/issues/13): Fix: use correct database on all threads - [@dblock](https://github.com/dblock).
