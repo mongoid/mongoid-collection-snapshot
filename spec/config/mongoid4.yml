@@ -1,0 +1,6 @@
+test:
+  sessions:
+    default:
+      uri: mongodb://localhost:27017/mongoid-collection-snapshot_test
+    imports:
+      uri: mongodb://localhost:27017/mongoid-collection-snapshot_test-imports
