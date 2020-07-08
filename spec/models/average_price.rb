@@ -29,7 +29,7 @@ class AverageArtistPrice < AveragePrice
     EOS
 
     Artwork.map_reduce(map, reduce).out(inline: 1).each do |doc|
-      if Mongoid::Compatibility::Version.mongoid5? || Mongoid::Compatibility::Version.mongoid6?
+      if Mongoid::Compatibility::Version.mongoid5_or_newer?
         collection_snapshot.insert_one(
           artist_id: doc['_id']['artist_id'],
           count: doc['value']['count'],
@@ -81,7 +81,7 @@ class AveragePartnerPrice < AveragePrice
     EOS
 
     Artwork.map_reduce(map, reduce).out(inline: 1).each do |doc|
-      if Mongoid::Compatibility::Version.mongoid5? || Mongoid::Compatibility::Version.mongoid6?
+      if Mongoid::Compatibility::Version.mongoid5_or_newer?
         collection_snapshot.insert_one(
           partner_id: doc['_id']['partner_id'],
           count: doc['value']['count'],

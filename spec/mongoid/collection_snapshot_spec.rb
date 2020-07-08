@@ -104,7 +104,7 @@ module Mongoid
 
       it 'safely cleans up all collections used by the snapshot' do
         # Create some collections with names close to the snapshots we'll create
-        if Mongoid::Compatibility::Version.mongoid5? || Mongoid::Compatibility::Version.mongoid6?
+        if Mongoid::Compatibility::Version.mongoid5_or_newer?
           Mongoid.default_client["#{MultiCollectionSnapshot.collection.name}.do.not_delete"].insert_one('a' => 1)
           Mongoid.default_client["#{MultiCollectionSnapshot.collection.name}.snapshorty"].insert_one('a' => 1)
           Mongoid.default_client["#{MultiCollectionSnapshot.collection.name}.hello.1"].insert_one('a' => 1)
@@ -115,19 +115,19 @@ module Mongoid
         end
 
         MultiCollectionSnapshot.create
-        collections = Mongoid::Compatibility::Version.mongoid5? || Mongoid::Compatibility::Version.mongoid6? ? Mongoid.default_client.database.collections : Mongoid.default_session.collections
+        collections = Mongoid::Compatibility::Version.mongoid5_or_newer? ? Mongoid.default_client.database.collections : Mongoid.default_session.collections
         before_create = collections.map(&:name)
         expect(before_create.length).to be > 0
 
         Timecop.travel(1.second.from_now)
         MultiCollectionSnapshot.create
-        collections = Mongoid::Compatibility::Version.mongoid5? || Mongoid::Compatibility::Version.mongoid6? ? Mongoid.default_client.database.collections : Mongoid.default_session.collections
+        collections = Mongoid::Compatibility::Version.mongoid5_or_newer? ? Mongoid.default_client.database.collections : Mongoid.default_session.collections
         after_create = collections.map(&:name)
         collections_created = (after_create - before_create).sort
         expect(collections_created.length).to eq(3)
 
         MultiCollectionSnapshot.latest.destroy
-        collections = Mongoid::Compatibility::Version.mongoid5? || Mongoid::Compatibility::Version.mongoid6? ? Mongoid.default_client.database.collections : Mongoid.default_session.collections
+        collections = Mongoid::Compatibility::Version.mongoid5_or_newer? ? Mongoid.default_client.database.collections : Mongoid.default_session.collections
         after_destroy = collections.map(&:name)
         collections_destroyed = (after_create - after_destroy).sort
         expect(collections_created).to eq(collections_destroyed)
@@ -136,13 +136,13 @@ module Mongoid
 
     context 'with a custom snapshot connection' do
       around(:each) do |example|
-        if Mongoid::Compatibility::Version.mongoid5? || Mongoid::Compatibility::Version.mongoid6?
+        if Mongoid::Compatibility::Version.mongoid5_or_newer?
           CustomConnectionSnapshot.snapshot_session.database.drop
         else
           CustomConnectionSnapshot.snapshot_session.drop
         end
         example.run
-        if Mongoid::Compatibility::Version.mongoid5? || Mongoid::Compatibility::Version.mongoid6?
+        if Mongoid::Compatibility::Version.mongoid5_or_newer?
           CustomConnectionSnapshot.snapshot_session.database.drop
         else
           CustomConnectionSnapshot.snapshot_session.drop
@@ -155,7 +155,7 @@ module Mongoid
           "#{CustomConnectionSnapshot.collection.name}.foo.#{snapshot.slug}",
           "#{CustomConnectionSnapshot.collection.name}.#{snapshot.slug}"
         ].each do |collection_name|
-          session = Mongoid::Compatibility::Version.mongoid5? || Mongoid::Compatibility::Version.mongoid6? ? Mongoid.default_client : Mongoid.default_session
+          session = Mongoid::Compatibility::Version.mongoid5_or_newer? ? Mongoid.default_client : Mongoid.default_session
           expect(session[collection_name].find.count).to eq(0)
           expect(CustomConnectionSnapshot.snapshot_session[collection_name].find.count).to eq(1)
         end
@@ -163,7 +163,7 @@ module Mongoid
 
       context '#documents' do
         it 'uses the custom session' do
-          if Mongoid::Compatibility::Version.mongoid5? || Mongoid::Compatibility::Version.mongoid6?
+          if Mongoid::Compatibility::Version.mongoid5_or_newer?
             expect(CustomConnectionSnapshot.new.documents.mongo_client).to eq CustomConnectionSnapshot.snapshot_session
           else
             expect(CustomConnectionSnapshot.new.documents.mongo_session).to eq CustomConnectionSnapshot.snapshot_session

@@ -20,7 +20,7 @@ class WidgetsAndGadgets
     collection_snapshot.drop
     Widget.all.each do |widget|
       Gadget.all.each do |gadget|
-        if Mongoid::Compatibility::Version.mongoid5? || Mongoid::Compatibility::Version.mongoid6?
+        if Mongoid::Compatibility::Version.mongoid5_or_newer?
           collection_snapshot.insert_one(widget_id: widget.id, gadget_id: gadget.id)
         else
           collection_snapshot.insert(widget_id: widget.id, gadget_id: gadget.id)
@@ -30,7 +30,7 @@ class WidgetsAndGadgets
   end
 
   def snapshot_session
-    if Mongoid::Compatibility::Version.mongoid5? || Mongoid::Compatibility::Version.mongoid6?
+    if Mongoid::Compatibility::Version.mongoid5_or_newer?
       Mongoid.client('imports')
     else
       Mongoid.session('imports')
