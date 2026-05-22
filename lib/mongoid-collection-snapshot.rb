@@ -47,7 +47,7 @@ module Mongoid
             session_id = snapshot_session.object_id.to_s
             Mongoid::Clients.set session_id, snapshot_session
             # tell the class to use the client by name
-            klass.class_variable_set :@@storage_options, client: session_id, collection: collection_name
+            klass.store_in client: session_id, collection: collection_name
           elsif Mongoid::Compatibility::Version.mongoid5?
             klass.store_in collection: collection_name
             klass.mongo_client = snapshot_session
