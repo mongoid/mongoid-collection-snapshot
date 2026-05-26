@@ -2,6 +2,9 @@ sudo: false
 
 matrix:
   include:
+    - rvm: 3.2
+      env:
+        - MONGOID_VERSION=8
     - rvm: 2.3.1
       env:
         - MONGOID_VERSION=7
