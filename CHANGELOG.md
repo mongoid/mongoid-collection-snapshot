@@ -1,3 +1,7 @@
+### 1.3.4 (Next)
+
+* Your contribution here.
+
 ### 1.3.3 (2026/10/14)
 
 * [#17](https://github.com/mongoid/mongoid-collection-snapshot/pull/17): Generate real SimpleCov coverage in one modern CI job and report to Coveralls; scope CI and coverage badges to upstream master.
