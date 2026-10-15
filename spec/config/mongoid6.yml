@@ -1,6 +1,6 @@
 test:
   clients:
     default:
-      uri: mongodb://localhost:27017/mongoid-collection-snapshot_test
+      uri: mongodb://<%= ENV.fetch('MONGODB_HOST', 'localhost:27017') %>/mongoid-collection-snapshot_test
     imports:
-      uri: mongodb://localhost:27017/mongoid-collection-snapshot_test-imports
+      uri: mongodb://<%= ENV.fetch('MONGODB_HOST', 'localhost:27017') %>/mongoid-collection-snapshot_test-imports

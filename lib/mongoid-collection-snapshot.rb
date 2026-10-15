@@ -42,12 +42,12 @@ module Mongoid
             end
             instance_eval(&document_block) if document_block
           end
-          if Mongoid::Compatibility::Version.mongoid6?
+          if Mongoid::VERSION.to_i >= 6
             # assign a name to the snapshot session
             session_id = snapshot_session.object_id.to_s
             Mongoid::Clients.set session_id, snapshot_session
             # tell the class to use the client by name
-            klass.class_variable_set :@@storage_options, client: session_id, collection: collection_name
+            klass.store_in client: session_id, collection: collection_name
           elsif Mongoid::Compatibility::Version.mongoid5?
             klass.store_in collection: collection_name
             klass.mongo_client = snapshot_session
@@ -81,7 +81,7 @@ module Mongoid
     end
 
     def drop_snapshot_collections
-      collections = Mongoid::Compatibility::Version.mongoid5? || Mongoid::Compatibility::Version.mongoid6? ? snapshot_session.database.collections : snapshot_session.collections
+      collections = Mongoid::VERSION.to_i >= 5 ? snapshot_session.database.collections : snapshot_session.collections
       collections.each do |collection|
         collection.drop if collection.name =~ /^#{self.collection.name}\.([^\.]+\.)?#{slug}$/
       end
@@ -100,7 +100,7 @@ module Mongoid
 
     # Override to supply custom database connection for snapshots
     def snapshot_session
-      Mongoid::Compatibility::Version.mongoid5? || Mongoid::Compatibility::Version.mongoid6? ? Mongoid.default_client : Mongoid.default_session
+      Mongoid::VERSION.to_i >= 5 ? Mongoid.default_client : Mongoid.default_session
     end
   end
 end
