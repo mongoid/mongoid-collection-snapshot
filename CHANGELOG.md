@@ -1,6 +1,5 @@
-### 1.3.3 (Next)
+### 1.3.3 (2026/10/14)
 
-* Your contribution here.
 * [#17](https://github.com/mongoid/mongoid-collection-snapshot/pull/17): Generate real SimpleCov coverage in one modern CI job and report to Coveralls; scope CI and coverage badges to upstream master.
 * [#17](https://github.com/mongoid/mongoid-collection-snapshot/pull/17): Modernize CI with GitHub Actions through Ruby 4.0, Mongoid 9, and MongoDB Server 8.0; use current Mongoid client and public snapshot storage APIs while retaining legacy coverage.
 

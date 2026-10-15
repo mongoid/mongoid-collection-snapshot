@@ -1,68 +1,50 @@
-Releasing Mongoid::CollectionSnapshot
-=====================================
+# Releasing Mongoid Collection Snapshot
 
-There're no particular rules about when to release mongoid-collection-snapshot. Release bug fixes frequently, features not so frequently and breaking API changes rarely.
+## Prepare
 
-### Release
+Use the upstream checkout on clean `master`, verify `origin` points to `mongoid/mongoid-collection-snapshot`, and run `git pull --ff-only`. Check supported platforms in [GitHub Actions](https://github.com/mongoid/mongoid-collection-snapshot/actions). Choose a patch version for fixes, minor for backward-compatible features, or major for breaking changes.
 
-Run tests, check that all tests succeed locally.
+Set `lib/mongoid-collection-snapshot/version.rb` to the release version. Date the matching changelog section using `YYYY/MM/DD` and remove its contribution placeholder.
 
-```
+```sh
 bundle install
-rake
-```
-
-Check that the last build succeeded in [Travis CI](https://travis-ci.org/mongoid/mongoid-collection-snapshot) for all supported platforms.
-
-Increment the version, modify [lib/mongoid/collection-snapshot/version.rb](lib/mongoid/collection-snapshot/version.rb).
-
-*  Increment the third number if the release has bug fixes and/or very minor features, only (eg. change `0.5.1` to `0.5.2`).
-*  Increment the second number if the release contains major features or breaking API changes (eg. change `0.5.1` to `0.4.0`).
-
-Change "Next Release" in [CHANGELOG.md](CHANGELOG.md) to the new version.
-
-```
-### 0.4.0 (2014-01-27)
-```
-
-Remove the line with "Your contribution here.", since there will be no more contributions to this release.
-
-Commit your changes.
-
-```
-git add CHANGELOG.md lib/mongoid-collection-snapshot/version.rb
-git commit -m "Preparing for release, 0.4.0."
+bundle exec rake
+git add CHANGELOG.md lib/mongoid-collection-snapshot/version.rb RELEASING.md
+git commit -m "Preparing for release, 1.3.3."
 git push origin master
 ```
 
-Release.
+Wait for the preparation commit's CI checks to pass.
 
-```
-$ rake release
+## Publish RubyGems and GitHub
 
-mongoid-collection-snapshot 0.4.0 built to pkg/mongoid-collection-snapshot-0.4.0.gem.
-Tagged v0.4.0.
-Pushed git commits and tags.
-Pushed mongoid-collection-snapshot 0.4.0 to rubygems.org.
+```sh
+bundle exec rake release
 ```
 
-### Prepare for the Next Version
+Complete RubyGems MFA when prompted. This builds the package, pushes the tag, and publishes to RubyGems. If interrupted, inspect existing tags and the RubyGems version before retrying. Never move published tags; if only publication is missing, use `gem push pkg/mongoid-collection-snapshot-1.3.3.gem`.
 
-Add the next release to [CHANGELOG.md](CHANGELOG.md).
+A tag alone does not create a GitHub release. Once RubyGems publication is verified, publish a matching GitHub release with changelog notes:
 
+```sh
+version=1.3.3
+notes="$(mktemp)"
+awk -v version="$version" '
+  /^### / {
+    if (found) exit
+    if ($2 == version) found = 1
+    next
+  }
+  found { print }
+' CHANGELOG.md > "$notes"
+gh release create "v$version" --repo mongoid/mongoid-collection-snapshot --verify-tag --title "$version" --notes-file "$notes" --latest
+rm "$notes"
+curl --fail --silent --show-error "https://rubygems.org/api/v2/rubygems/mongoid-collection-snapshot/versions/$version.json"
+gh release view "v$version" --repo mongoid/mongoid-collection-snapshot
 ```
-Next Release
-============
 
-* Your contribution here.
-```
+Verify both the published gem and non-draft GitHub release.
 
-Increment the minor version, modify [lib/mongoid-collection-snapshot/version.rb](lib/mongoid-collection-snapshot/version.rb).
+## Prepare the Next Version
 
-Commit your changes.
-
-```
-git add CHANGELOG.md lib/mongoid-collection-snapshot/version.rb
-git commit -m "Preparing for next release, 0.4.1."
-git push origin master
-```
+Increment the development patch version in `lib/mongoid-collection-snapshot/version.rb` (for example, `1.3.4`). Add `### 1.3.4 (Next)` with a contribution placeholder above the released changelog section. Commit and push those changes to `master` without changing the release tag.
