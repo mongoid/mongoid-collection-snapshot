@@ -11,8 +11,6 @@ This is a forked, renamed, maintained and supported version of [mongoid_collecti
 
 The Ruby 4.0 CI job measures library line coverage with SimpleCov and submits `coverage/.resultset.json` to Coveralls using GitHub's automatic token. Other matrix jobs do not submit duplicate reports. Run `COVERAGE=true bundle install` followed by `COVERAGE=true bundle exec rake spec` for a local report. The default-branch badge requires Coveralls to accept an upstream `master` build; configuring this workflow does not activate the external service.
 
-CI tests representative compatible combinations of Mongoid 3 through 9, Ruby 2.1 through 4.0, and MongoDB Server 2.6 through 8.0, including Ruby 4.0 / Mongoid 9 / MongoDB 8.0. See [the test matrix](.github/workflows/test.yml); this is not a Cartesian product of supported versions. Mongoid 3–4 use MongoDB 2.6 because their Moped driver enumerates collections via the removed `system.namespaces` collection. Set `MONGOID_VERSION` to select a Mongoid major version and `MONGODB_HOST` to override the default `localhost:27017` when running tests.
-
 ### Example
 
 Suppose that you have a Mongoid model called `Artwork`, stored in a MongoDB collection called `artworks` and the underlying documents look something like:
