@@ -80,11 +80,16 @@ module Mongoid
       end
     end
 
-    def drop_snapshot_collections
-      collections = Mongoid::VERSION.to_i >= 5 ? snapshot_session.database.collections : snapshot_session.collections
-      collections.each do |collection|
-        collection.drop if collection.name =~ /^#{self.collection.name}\.([^\.]+\.)?#{slug}$/
+    def collections
+      available = Mongoid::VERSION.to_i >= 5 ? snapshot_session.database.collections : snapshot_session.collections
+      pattern = /\A#{Regexp.escape(collection.name)}\.(?:[^.]+\.)?#{Regexp.escape(slug.to_s)}\z/
+      available.select do |snapshot_collection|
+        snapshot_collection.name =~ pattern
       end
+    end
+
+    def drop_snapshot_collections
+      collections.each(&:drop)
     end
 
     # Since we should always be using the latest instance of this class, this method is
