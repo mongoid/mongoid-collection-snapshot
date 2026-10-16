@@ -1,23 +1,24 @@
 ### 1.3.4 (Next)
 
+* [#18](https://github.com/mongoid/mongoid-collection-snapshot/pull/18): Migrate Danger to use danger-pr-comment workflows, retaining legacy Ruby compatibility - [@dblock](https://github.com/dblock).
 * Your contribution here.
 
 ### 1.3.3 (2026/10/14)
 
-* [#17](https://github.com/mongoid/mongoid-collection-snapshot/pull/17): Generate real SimpleCov coverage in one modern CI job and report to Coveralls; scope CI and coverage badges to upstream master.
-* [#17](https://github.com/mongoid/mongoid-collection-snapshot/pull/17): Modernize CI with GitHub Actions through Ruby 4.0, Mongoid 9, and MongoDB Server 8.0; use current Mongoid client and public snapshot storage APIs while retaining legacy coverage.
+* [#17](https://github.com/mongoid/mongoid-collection-snapshot/pull/17): Generate real SimpleCov coverage in one modern CI job and report to Coveralls; scope CI and coverage badges to upstream master - [@dblock](https://github.com/dblock).
+* [#17](https://github.com/mongoid/mongoid-collection-snapshot/pull/17): Modernize CI with GitHub Actions through Ruby 4.0, Mongoid 9, and MongoDB Server 8.0; use current Mongoid client and public snapshot storage APIs while retaining legacy coverage - [@dblock](https://github.com/dblock).
 
-### 1.3.2 (6/4/2017)
+### 1.3.2 (2017/06/04)
 
 * [#13](https://github.com/mongoid/mongoid-collection-snapshot/issues/13): Fix: use correct database on all threads - [@dblock](https://github.com/dblock).
 * [#7](https://github.com/mongoid/mongoid-collection-snapshot/issues/7): Fix: `max_collection_snapshot_instances` broken - [@dblock](https://github.com/dblock).
 
-### 1.3.1 (5/22/2017)
+### 1.3.1 (2017/05/22)
 
 * [#11](https://github.com/mongoid/mongoid-collection-snapshot/pull/11): Fix: incorrect connection used with Mongoid 6 - [@dblock](https://github.com/dblock).
 * [#8](https://github.com/mongoid/mongoid-collection-snapshot/pull/8): Lock mongoid-compatibility at 0.4.0 or newer - [@dblock](https://github.com/dblock).
 
-### 1.3.0 (1/20/2017)
+### 1.3.0 (2017/01/20)
 
 * [#2](https://github.com/mongoid/mongoid-collection-snapshot/pull/2): Support for Mongoid 6 - [@dblock](https://github.com/dblock).
 * [#1](https://github.com/mongoid/mongoid-collection-snapshot/pull/1): Gem renamed to mongoid-collection-snapshot and forked to the [mongoid org](https://github.com/mongoid) - [@dblock](https://github.com/dblock).
