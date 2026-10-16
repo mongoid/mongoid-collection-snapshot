@@ -1,6 +1,7 @@
 ### 1.3.4 (Next)
 
 * Your contribution here.
+* [#19](https://github.com/mongoid/mongoid-collection-snapshot/pull/19): Add `snapshot.collections` discovery from the configured snapshot database, independent of dynamically generated document classes; use the same exact-name matching for cleanup - [@dblock](https://github.com/dblock).
 
 ### 1.3.3 (2026/10/14)
 

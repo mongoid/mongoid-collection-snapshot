@@ -71,6 +71,20 @@ andy_warhol_price = ArtistArtworkPrice.latest.collection_snapshot.where(artist_i
 average_price = andy_warhol_price['sum'] / andy_warhol_price['count']
 ```
 
+### Discover Snapshot Collections
+
+Use `snapshot.collections` to discover existing collections belonging to a snapshot, including its unnamed collection and named subcollections. Discovery queries the snapshot database, not the lazily populated `document_classes` cache, so it works before calling `documents` and includes collections without a `document` declaration.
+
+```ruby
+snapshot = ArtistArtworkPrice.latest
+snapshot.collections.each do |collection|
+  puts collection.name
+  collection.find.each { |document| puts document.inspect }
+end if snapshot
+```
+
+The result is an Array of driver collection objects in the snapshot's configured `snapshot_session`, not Mongoid model classes. Their names are full database collection names; `snapshot.documents('average')` still takes the logical subcollection name, not a full collection name. Only existing collections for this snapshot are returned; discovery neither creates collections nor includes older snapshots. Collection order is unspecified.
+
 ### Snapshot Cleanup
 
 By default, mongoid-collection-snapshot maintains the most recent two snapshots computed any given time. Set `max_collection_snapshot_instances` to change this.
