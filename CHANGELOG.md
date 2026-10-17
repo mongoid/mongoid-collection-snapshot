@@ -1,5 +1,6 @@
 ### 1.3.4 (Next)
 
+* [#20](https://github.com/mongoid/mongoid-collection-snapshot/pull/20): Combine coverage from real legacy and modern Mongoid integration tests - [@dblock](https://github.com/dblock).
 * [#18](https://github.com/mongoid/mongoid-collection-snapshot/pull/18): Migrate Danger to use danger-pr-comment workflows, retaining legacy Ruby compatibility - [@dblock](https://github.com/dblock).
 * Your contribution here.
 * [#19](https://github.com/mongoid/mongoid-collection-snapshot/pull/19): Add `snapshot.collections` discovery from the configured snapshot database, independent of dynamically generated document classes; use the same exact-name matching for cleanup - [@dblock](https://github.com/dblock).
