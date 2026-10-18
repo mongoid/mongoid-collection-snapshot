@@ -1,3 +1,7 @@
+### 1.4.1 (Next)
+
+* Your contribution here.
+
 ### 1.4.0 (2026/10/18)
 
 * [#20](https://github.com/mongoid/mongoid-collection-snapshot/pull/20): Combine coverage from real legacy and modern Mongoid integration tests - [@dblock](https://github.com/dblock).
