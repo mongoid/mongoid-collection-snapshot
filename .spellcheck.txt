@@ -2,6 +2,7 @@ aaw
 APIs
 AverageArtistPriceMR
 baz
+Bundler
 CHANGELOG
 changelog
 CollectionSnapshot
@@ -14,6 +15,7 @@ Gemfile
 gemspec
 Hirst
 joeyAghion
+JRuby
 linter
 literalXsnapshots
 localhost
@@ -24,10 +26,13 @@ mongo
 mongodb
 Mongoid
 mongoid
+MongoidCollectionSnapshotRelease
 MySnapshot
 ODM
 pre
+Rakefile
 rb
+README
 recomputation
 RSpec
 RuboCop

@@ -52,3 +52,4 @@ tmtags
 
 # For rubinius:
 *.rbc
+/vendor/bundle
