@@ -1,5 +1,4 @@
-$LOAD_PATH.push File.expand_path('lib', __dir__)
-require 'mongoid-collection-snapshot/version'
+require_relative 'lib/mongoid-collection-snapshot/version'
 
 Gem::Specification.new do |s|
   s.name = 'mongoid-collection-snapshot'
