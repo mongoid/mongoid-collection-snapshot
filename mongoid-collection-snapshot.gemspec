@@ -1,4 +1,4 @@
-$LOAD_PATH.push File.expand_path('../lib', __FILE__)
+$LOAD_PATH.push File.expand_path('lib', __dir__)
 require 'mongoid-collection-snapshot/version'
 
 Gem::Specification.new do |s|
@@ -12,7 +12,7 @@ Gem::Specification.new do |s|
   s.require_paths = ['lib']
   s.homepage = 'http://github.com/mongoid/mongoid-collection-snapshot'
   s.licenses = ['MIT']
-  s.summary = 'Easy maintenence of collections of processed data in MongoDB with the Mongoid ODM.'
+  s.summary = 'Easy maintenance of collections of processed data in MongoDB with the Mongoid ODM.'
   s.add_dependency 'mongoid', '>= 3.0'
   s.add_dependency 'mongoid-compatibility', '>= 0.4.0'
   s.add_dependency 'mongoid-slug'

@@ -1,17 +1,20 @@
-Mongoid Collection Snapshot
-===========================
+# Mongoid Collection Snapshot
+
+[![Gem Version](https://badge.fury.io/rb/mongoid-collection-snapshot.svg)](https://badge.fury.io/rb/mongoid-collection-snapshot) [![Test](https://github.com/mongoid/mongoid-collection-snapshot/actions/workflows/test.yml/badge.svg?branch=master)](https://github.com/mongoid/mongoid-collection-snapshot/actions/workflows/test.yml?query=branch%3Amaster) [![Coverage Status](https://coveralls.io/repos/github/mongoid/mongoid-collection-snapshot/badge.svg?branch=master)](https://coveralls.io/github/mongoid/mongoid-collection-snapshot?branch=master)
 
 Easy maintenance of collections of processed data in MongoDB with Mongoid.
 
 This is a forked, renamed, maintained and supported version of [mongoid_collection_snapshot](https://github.com/aaw/mongoid_collection_snapshot).
 
-[![Gem Version](https://badge.fury.io/rb/mongoid-collection-snapshot.svg)](https://badge.fury.io/rb/mongoid-collection-snapshot)
-[![Test](https://github.com/mongoid/mongoid-collection-snapshot/actions/workflows/test.yml/badge.svg?branch=master)](https://github.com/mongoid/mongoid-collection-snapshot/actions/workflows/test.yml?query=branch%3Amaster)
-[![Coverage Status](https://coveralls.io/repos/github/mongoid/mongoid-collection-snapshot/badge.svg?branch=master)](https://coveralls.io/github/mongoid/mongoid-collection-snapshot?branch=master)
+## Installation
 
-The Ruby 4.0 CI job measures library line coverage with SimpleCov and submits `coverage/.resultset.json` to Coveralls using GitHub's automatic token. Other matrix jobs do not submit duplicate reports. Run `COVERAGE=true bundle install` followed by `COVERAGE=true bundle exec rake spec` for a local report. The default-branch badge requires Coveralls to accept an upstream `master` build; configuring this workflow does not activate the external service.
+Add the gem to your Gemfile and run `bundle install`.
 
-### Example
+```ruby
+gem 'mongoid-collection-snapshot'
+```
+
+## Example
 
 Suppose that you have a Mongoid model called `Artwork`, stored in a MongoDB collection called `artworks` and the underlying documents look something like:
 
@@ -27,7 +30,7 @@ A mongoid-collection-snapshot solves this problem by providing an atomic view of
 
 In the example below, we set up our artist price sum collection by including `Mongoid::CollectionSnapshot` and implementing a `build` method.
 
-``` ruby
+```ruby
 class ArtistArtworkPrice
   include Mongoid::CollectionSnapshot
 
@@ -77,10 +80,12 @@ Use `snapshot.collections` to discover existing collections belonging to a snaps
 
 ```ruby
 snapshot = ArtistArtworkPrice.latest
-snapshot.collections.each do |collection|
-  puts collection.name
-  collection.find.each { |document| puts document.inspect }
-end if snapshot
+if snapshot
+  snapshot.collections.each do |collection|
+    puts collection.name
+    collection.find.each { |document| puts document.inspect }
+  end
+end
 ```
 
 The result is an Array of driver collection objects in the snapshot's configured `snapshot_session`, not Mongoid model classes. Their names are full database collection names; `snapshot.documents('average')` still takes the logical subcollection name, not a full collection name. Only existing collections for this snapshot are returned; discovery neither creates collections nor includes older snapshots. Collection order is unspecified.
@@ -127,14 +132,16 @@ This code can be found in the [example](example) folder.
 
 You can maintain multiple collections atomically within the same snapshot by passing unique collection identifiers to `collection_snaphot` when you call it in your build or query methods:
 
-``` ruby
+```ruby
 class ArtistArtworkPrice
   include Mongoid::CollectionSnapshot
 
   def build
     # define map/reduce for average and max aggregations
-    Mongoid.default_session.command('mapreduce' => 'artworks', map: map_avg, reduce: reduce_avg, out: collection_snapshot('average'))
-    Mongoid.default_session.command('mapreduce' => 'artworks', map: map_max, reduce: reduce_max, out: collection_snapshot('max'))
+    Mongoid.default_session.command('mapreduce' => 'artworks', map: map_avg, reduce: reduce_avg,
+                                    out: collection_snapshot('average'))
+    Mongoid.default_session.command('mapreduce' => 'artworks', map: map_max, reduce: reduce_max,
+                                    out: collection_snapshot('max'))
   end
 
   def average_price(artist)
@@ -215,7 +222,11 @@ def snapshot_session
 end
 ```
 
-### License
+## Contributing
+
+See [CONTRIBUTING.md](CONTRIBUTING.md), [CHANGELOG.md](CHANGELOG.md), [UPGRADING.md](UPGRADING.md), and [RELEASING.md](RELEASING.md).
+
+## License
 
 Copyright (c) 2011-2017 Art.sy Inc. and Contributors
 

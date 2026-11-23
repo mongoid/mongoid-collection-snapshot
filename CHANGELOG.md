@@ -2,6 +2,7 @@
 
 * [#25](https://github.com/mongoid/mongoid-collection-snapshot/pull/25): Upgrade danger-pr-comment to 0.3.0 from the `danger` organization and skip empty Danger report comments - [@dblock](https://github.com/dblock).
 * Your contribution here.
+* [#21](https://github.com/mongoid/mongoid-collection-snapshot/pull/21): Lint Markdown, YAML, and spelling with rubocop-md, rubocop-prose, rubocop-spellcheck, and rubocop-yaml in a separate Lint workflow, and clean up documentation - [@dblock](https://github.com/dblock).
 
 ### 1.4.0 (2026/10/18)
 
